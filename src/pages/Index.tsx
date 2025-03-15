@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "@/components/LoginForm";
+import FingerprintAnimation from "@/components/FingerprintAnimation";
+import { toast } from "sonner";
 
 interface IndexProps {
   setIsLoggedIn: (value: boolean) => void;
@@ -10,18 +12,49 @@ interface IndexProps {
 const Index = ({ setIsLoggedIn }: IndexProps) => {
   const navigate = useNavigate();
   const [fadeIn, setFadeIn] = useState(false);
+  const [showFingerprint, setShowFingerprint] = useState(false);
+  const [isLocationVerified, setIsLocationVerified] = useState(false);
 
   useEffect(() => {
     setFadeIn(true);
   }, []);
 
   const handleLogin = (aadhaarNumber: string) => {
-    // In a real app, authenticate with a server
-    if (aadhaarNumber && aadhaarNumber.length === 12) {
-      localStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(true);
-      navigate("/dashboard");
+    // Basic validation
+    if (!aadhaarNumber || aadhaarNumber.length !== 12) {
+      toast.error("Please enter a valid 12-digit Aadhaar number");
+      return;
     }
+    
+    setShowFingerprint(true);
+    
+    // Check location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setIsLocationVerified(true);
+          // In a real app, you would send these coordinates to your server
+          console.log("Location verified:", position.coords.latitude, position.coords.longitude);
+          
+          // Fingerprint authentication is handled in the LoginForm component
+        },
+        (err) => {
+          toast.error("Location verification failed. Please enable location services.");
+          setShowFingerprint(false);
+          console.error("Location error:", err);
+        }
+      );
+    } else {
+      toast.error("Location services not supported by your browser");
+      setShowFingerprint(false);
+    }
+  };
+
+  const handleAuthenticationComplete = () => {
+    localStorage.setItem("isLoggedIn", "true");
+    setIsLoggedIn(true);
+    navigate("/dashboard");
+    toast.success("Authentication successful");
   };
 
   return (
@@ -32,7 +65,17 @@ const Index = ({ setIsLoggedIn }: IndexProps) => {
           <p className="text-gray-600">Advanced Healthcare Management</p>
         </div>
         
-        <LoginForm onLogin={handleLogin} />
+        {showFingerprint ? (
+          <div className="py-8 space-y-6 animate-fade-in">
+            <FingerprintAnimation 
+              message={isLocationVerified ? "Verifying identity..." : "Verifying location..."}
+              onComplete={handleAuthenticationComplete}
+              duration={3000}
+            />
+          </div>
+        ) : (
+          <LoginForm onLogin={handleLogin} />
+        )}
         
         <div className="text-center text-sm text-gray-500 mt-4">
           <p>Secure login for authorized medical personnel.</p>
