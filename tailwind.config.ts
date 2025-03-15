@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				medical: {
+					light: '#E3F2FD',
+					DEFAULT: '#2196F3',
+					dark: '#1565C0',
+					accent: '#03A9F4',
+					success: '#4CAF50',
+					warning: '#FFC107',
+					danger: '#F44336',
+					gray: '#F5F7FA'
 				}
 			},
 			borderRadius: {
@@ -70,25 +81,74 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'fingerprint-scan': {
+					'0%': { opacity: '0.5', transform: 'scale(0.95)' },
+					'50%': { opacity: '1', transform: 'scale(1.05)' },
+					'100%': { opacity: '0.5', transform: 'scale(0.95)' }
+				},
+				'pulse-ring': {
+					'0%': { 
+						transform: 'scale(0.5)', 
+						opacity: '0' 
 					},
-					to: {
-						height: '0'
+					'50%': { 
+						opacity: '1' 
+					},
+					'100%': { 
+						transform: 'scale(1.5)', 
+						opacity: '0' 
+					}
+				},
+				'fade-in': {
+					'0%': { 
+						opacity: '0', 
+						transform: 'translateY(10px)' 
+					},
+					'100%': { 
+						opacity: '1', 
+						transform: 'translateY(0)' 
+					}
+				},
+				'slide-up': {
+					'0%': { 
+						transform: 'translateY(20px)',
+						opacity: '0' 
+					},
+					'100%': { 
+						transform: 'translateY(0)',
+						opacity: '1' 
+					}
+				},
+				'slide-in': {
+					'0%': { 
+						transform: 'translateX(20px)',
+						opacity: '0' 
+					},
+					'100%': { 
+						transform: 'translateX(0)',
+						opacity: '1' 
 					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
+				'pulse-ring': 'pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'slide-up': 'slide-up 0.5s ease-out',
+				'slide-in': 'slide-in 0.5s ease-out'
+			},
+			backdropFilter: {
+				'none': 'none',
+				'blur': 'blur(8px)'
 			}
 		}
 	},
